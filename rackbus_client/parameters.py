@@ -12,7 +12,6 @@ marked in the description.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -98,7 +97,7 @@ def get_by_name(name: str) -> VHCode:
     return BY_NAME[name]
 
 
-def get_by_vh(v: int, h: int) -> Optional[VHCode]:
+def get_by_vh(v: int, h: int) -> VHCode | None:
     return BY_VH.get((v, h))
 
 

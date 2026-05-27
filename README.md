@@ -1,7 +1,7 @@
 # py-rackbus
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://img.shields.io/badge/tests-57%20passing-brightgreen.svg)](#testing)
 
 An independent Python client for the **Rackbus SL** serial protocol —
@@ -50,7 +50,7 @@ configuration to live equipment.
 ## Quick start
 
 ```bash
-git clone https://github.com/kenjicd-source/py-rackbus.git
+git clone https://github.com/kenjicd/py-rackbus.git
 cd py-rackbus
 pip install pyserial
 python examples/basic_usage.py COM5 3

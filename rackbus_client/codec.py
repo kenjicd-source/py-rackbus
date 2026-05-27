@@ -27,8 +27,6 @@ All EOF markers have high nibble 0xF (observed: F2, FA, FF).
 
 from __future__ import annotations
 
-from typing import Optional, Tuple
-
 from .crc import compute_request_crc
 
 # --- Parity helpers ---
@@ -121,7 +119,7 @@ def encode_vr_request(addr: int, v: int, h: int) -> bytes:
 # --- Response parsing ---
 
 
-def parse_response_frame(frame: bytes) -> Optional[Tuple[bytes, Optional[bytes]]]:
+def parse_response_frame(frame: bytes) -> tuple[bytes, bytes | None] | None:
     """Parse a single response frame.
 
     Long format:  CA C0 5F <data> [03] 72 CRC1 CRC2 <EOF>

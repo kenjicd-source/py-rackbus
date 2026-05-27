@@ -21,10 +21,8 @@ formula is found.
 
 from __future__ import annotations
 
-from typing import Tuple
 
-
-def compute_request_crc(body: bytes) -> Tuple[int, int]:
+def compute_request_crc(body: bytes) -> tuple[int, int]:
     """Compute the (crc1, crc2) pair for a request body — RAW (without parity)."""
     msb_count = sum(1 for b in body if b & 0x80)
     crc1 = 0x2E ^ (0x08 if msb_count % 2 else 0x00)

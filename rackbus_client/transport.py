@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import Optional
 
 import serial
 
@@ -98,7 +97,7 @@ class RackbusTransport:
             self.ser.read(64)  # drain any acks
         time.sleep(0.2)
 
-    def _listen(self, total_s: Optional[float] = None) -> bytes:
+    def _listen(self, total_s: float | None = None) -> bytes:
         """Read until inter-frame silence > 100 ms or total timeout."""
         if total_s is None:
             total_s = self.listen_timeout

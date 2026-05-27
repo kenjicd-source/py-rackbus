@@ -118,9 +118,10 @@ def test_wire_to_char(wire, char):
 )
 def test_encode_vr_byte_for_byte(addr, v, h, expected_hex):
     expected = bytes.fromhex(expected_hex)
+    actual = encode_vr_request(addr, v, h)
     assert (
-        encode_vr_request(addr, v, h) == expected
-    ), f"VR {addr},{v},{h}: expected {expected_hex}, got {encode_vr_request(addr,v,h).hex().upper()}"
+        actual == expected
+    ), f"VR {addr},{v},{h}: expected {expected_hex}, got {actual.hex().upper()}"
 
 
 def test_frame_structure():

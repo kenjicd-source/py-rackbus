@@ -12,7 +12,6 @@ Example:
 from __future__ import annotations
 
 import logging
-from typing import Dict, List, Optional, Union
 
 from .exceptions import RackbusTimeoutError
 from .parameters import (
@@ -23,7 +22,7 @@ from .transport import RackbusTransport
 
 log = logging.getLogger(__name__)
 
-Value = Union[float, int, str, None]
+Value = float | int | str | None
 
 
 class RackbusClient:
@@ -82,52 +81,52 @@ class RackbusClient:
 
     # --- Convenience accessors ---
 
-    def read_mass_flow(self) -> Optional[float]:
+    def read_mass_flow(self) -> float | None:
         """Mass flow in t/h."""
         return self.read_parameter("MASS_FLOW")
 
-    def read_density(self) -> Optional[float]:
+    def read_density(self) -> float | None:
         """Density in g/cm³."""
         return self.read_parameter("DENSITY")
 
-    def read_temperature(self) -> Optional[float]:
+    def read_temperature(self) -> float | None:
         """Process temperature in °C."""
         return self.read_parameter("TEMPERATURE")
 
-    def read_totalizer_1(self) -> Optional[float]:
+    def read_totalizer_1(self) -> float | None:
         """Totalizer 1 in t."""
         return self.read_parameter("TOTALIZER_1")
 
-    def read_totalizer_2(self) -> Optional[float]:
+    def read_totalizer_2(self) -> float | None:
         """Totalizer 2 in t."""
         return self.read_parameter("TOTALIZER_2")
 
     # Alias requested in the API design
     read_totalizer = read_totalizer_1
 
-    def read_volume_flow(self) -> Optional[float]:
+    def read_volume_flow(self) -> float | None:
         """Volume flow in m³/h."""
         return self.read_parameter("VOLUME_FLOW")
 
-    def read_tag_number(self) -> Optional[str]:
+    def read_tag_number(self) -> str | None:
         """User-assigned tag text."""
         return self.read_parameter("TAG_NUMBER")
 
-    def read_bus_address(self) -> Optional[int]:
+    def read_bus_address(self) -> int | None:
         """Slave's own knowledge of its bus address (sanity check)."""
         return self.read_parameter("BUS_ADDRESS")
 
-    def read_calibration_factor(self) -> Optional[float]:
+    def read_calibration_factor(self) -> float | None:
         """K-factor (calibration)."""
         return self.read_parameter("CALIBR_FACTOR")
 
-    def read_serial_number(self) -> Optional[int]:
+    def read_serial_number(self) -> int | None:
         """Sensor serial number."""
         return self.read_parameter("SERIAL_NUMBER")
 
     # --- Bulk ---
 
-    def read_all(self, names: Optional[List[str]] = None) -> Dict[str, Value]:
+    def read_all(self, names: list[str] | None = None) -> dict[str, Value]:
         """Read a list of parameters (default: a useful subset). Returns dict."""
         if names is None:
             names = [
@@ -143,7 +142,7 @@ class RackbusClient:
                 "SERIAL_NUMBER",
                 "TAG_NUMBER",
             ]
-        out: Dict[str, Value] = {}
+        out: dict[str, Value] = {}
         for n in names:
             try:
                 out[n] = self.read_parameter(n)
