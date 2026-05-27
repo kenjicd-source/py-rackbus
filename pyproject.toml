@@ -1,0 +1,84 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py-rackbus"
+version = "0.1.0"
+description = "Independent client for the Rackbus SL legacy industrial serial protocol"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Denis S." },
+]
+keywords = [
+    "rs485",
+    "industrial",
+    "serial",
+    "rackbus",
+    "flowmeter",
+    "coriolis",
+    "reverse-engineering",
+    "fieldbus",
+    "legacy-hardware",
+    "endress-hauser",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Hardware",
+    "Topic :: Communications",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "pyserial>=3.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "black",
+    "ruff",
+    "mypy",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/kenjicd/py-rackbus"
+"Bug Tracker" = "https://github.com/kenjicd/py-rackbus/issues"
+"Documentation" = "https://github.com/kenjicd/py-rackbus#readme"
+"Source" = "https://github.com/kenjicd/py-rackbus"
+
+[tool.setuptools.packages.find]
+include = ["rackbus_client*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true

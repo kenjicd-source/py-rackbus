@@ -1,0 +1,14 @@
+# PlatformIO build artifacts
+.pio/
+.vscode/
+build/
+*.bin
+*.elf
+*.map
+
+# Real secrets — copy include/secrets.h.example to include/secrets.h and edit
+include/secrets.h
+
+# Serial monitor logs
+logs/
+*.log
