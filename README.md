@@ -50,7 +50,7 @@ configuration to live equipment.
 ## Quick start
 
 ```bash
-git clone https://github.com/kenjicd/py-rackbus.git
+git clone https://github.com/kenjicd-source/py-rackbus.git
 cd py-rackbus
 pip install pyserial
 python examples/basic_usage.py COM5 3

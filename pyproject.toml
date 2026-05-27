@@ -55,10 +55,10 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/kenjicd/py-rackbus"
-"Bug Tracker" = "https://github.com/kenjicd/py-rackbus/issues"
-"Documentation" = "https://github.com/kenjicd/py-rackbus#readme"
-"Source" = "https://github.com/kenjicd/py-rackbus"
+"Homepage" = "https://github.com/kenjicd-source/py-rackbus"
+"Bug Tracker" = "https://github.com/kenjicd-source/py-rackbus/issues"
+"Documentation" = "https://github.com/kenjicd-source/py-rackbus#readme"
+"Source" = "https://github.com/kenjicd-source/py-rackbus"
 
 [tool.setuptools.packages.find]
 include = ["rackbus_client*"]
