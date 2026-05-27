@@ -18,6 +18,7 @@ data section is sufficient for our use case. A `verify_response_crc()`
 stub is included so that callers can opt into verification when the
 formula is found.
 """
+
 from __future__ import annotations
 
 from typing import Tuple

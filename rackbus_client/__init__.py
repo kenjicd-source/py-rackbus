@@ -7,18 +7,24 @@ Public API:
     c.read_mass_flow()
     c.close()
 """
+
 from .client import RackbusClient
 from .exceptions import (
-    RackbusError, RackbusTimeoutError,
-    RackbusChecksumError, RackbusDecodeError,
+    RackbusChecksumError,
+    RackbusDecodeError,
+    RackbusError,
+    RackbusTimeoutError,
 )
 from .parameters import PARAMETERS, VHCode
 
 __all__ = [
-    'RackbusClient',
-    'RackbusError', 'RackbusTimeoutError',
-    'RackbusChecksumError', 'RackbusDecodeError',
-    'PARAMETERS', 'VHCode',
+    "RackbusClient",
+    "RackbusError",
+    "RackbusTimeoutError",
+    "RackbusChecksumError",
+    "RackbusDecodeError",
+    "PARAMETERS",
+    "VHCode",
 ]
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"

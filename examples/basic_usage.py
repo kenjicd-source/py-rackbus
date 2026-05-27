@@ -17,6 +17,7 @@ Usage:
 If the package is not installed, run from the repo root so the local
 `rackbus_client/` is importable.
 """
+
 import logging
 import sys
 from pathlib import Path
@@ -30,10 +31,10 @@ from rackbus_client import RackbusClient
 def main():
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     )
 
-    port = sys.argv[1] if len(sys.argv) > 1 else 'COM5'
+    port = sys.argv[1] if len(sys.argv) > 1 else "COM5"
     address = int(sys.argv[2]) if len(sys.argv) > 2 else 3
 
     with RackbusClient(port=port, address=address) as client:
@@ -51,5 +52,5 @@ def main():
             print(f"  {name:<22s} = {value!r}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -19,7 +19,9 @@ Reverse-engineered behavior:
   4. First attempt sometimes returns an empty data frame ("not ready yet").
      Retrying after another warmup usually yields the data.
 """
+
 from __future__ import annotations
+
 import logging
 import time
 from typing import Optional
@@ -27,8 +29,11 @@ from typing import Optional
 import serial
 
 from .codec import (
-    encode_vr_request, split_frames,
-    parse_response_frame, decode_data, parse_value,
+    decode_data,
+    encode_vr_request,
+    parse_response_frame,
+    parse_value,
+    split_frames,
 )
 from .exceptions import RackbusTimeoutError
 
@@ -36,9 +41,9 @@ log = logging.getLogger(__name__)
 
 
 # Continuation patterns reverse-engineered from ZA672 wire dump
-POLL    = bytes.fromhex('CA3FF2')       # master presence-poll / slave ack
-CONT_DD = bytes.fromhex('CADDAA28F2')   # continuation 1 ("ack polling")
-CONT_48 = bytes.fromhex('CA48F2')       # continuation 2 ("send data")
+POLL = bytes.fromhex("CA3FF2")  # master presence-poll / slave ack
+CONT_DD = bytes.fromhex("CADDAA28F2")  # continuation 1 ("ack polling")
+CONT_48 = bytes.fromhex("CA48F2")  # continuation 2 ("send data")
 
 
 class RackbusTransport:
@@ -49,7 +54,7 @@ class RackbusTransport:
         port: str,
         baudrate: int = 19200,
         bytesize: int = 8,
-        parity: str = 'N',
+        parity: str = "N",
         stopbits: int = 1,
         timeout: float = 0.05,
         inter_chunk_ms: int = 50,
@@ -57,11 +62,14 @@ class RackbusTransport:
         warmup_count: int = 5,
         retries: int = 5,
     ):
-        log.info("Opening Rackbus port %s @ %d %d%s%d",
-                 port, baudrate, bytesize, parity, stopbits)
+        log.info("Opening Rackbus port %s @ %d %d%s%d", port, baudrate, bytesize, parity, stopbits)
         self.ser = serial.Serial(
-            port=port, baudrate=baudrate, bytesize=bytesize,
-            parity=parity, stopbits=stopbits, timeout=timeout,
+            port=port,
+            baudrate=baudrate,
+            bytesize=bytesize,
+            parity=parity,
+            stopbits=stopbits,
+            timeout=timeout,
         )
         self.inter_chunk_ms = inter_chunk_ms
         self.listen_timeout = listen_timeout
@@ -73,7 +81,7 @@ class RackbusTransport:
             self.ser.close()
             log.info("Rackbus port closed")
 
-    def __enter__(self) -> 'RackbusTransport':
+    def __enter__(self) -> RackbusTransport:
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:
@@ -84,9 +92,10 @@ class RackbusTransport:
     def _warmup(self) -> None:
         """Send presence-polls to wake the slave from idle."""
         for _ in range(self.warmup_count):
-            self.ser.write(POLL); self.ser.flush()
+            self.ser.write(POLL)
+            self.ser.flush()
             time.sleep(0.05)
-            self.ser.read(64)            # drain any acks
+            self.ser.read(64)  # drain any acks
         time.sleep(0.2)
 
     def _listen(self, total_s: Optional[float] = None) -> bytes:
@@ -100,7 +109,8 @@ class RackbusTransport:
             data = self.ser.read(512)
             now = time.time()
             if data:
-                rx.extend(data); last_rx = now
+                rx.extend(data)
+                last_rx = now
             elif last_rx and (now - last_rx) > 0.1:
                 break
             else:
@@ -118,19 +128,22 @@ class RackbusTransport:
         frame = encode_vr_request(addr, v, h)
         gap = self.inter_chunk_ms / 1000.0
 
-        last_rx = b''
+        last_rx = b""
         for attempt in range(self.retries):
             self._warmup()
-            log.debug("[attempt %d] TX VR: %s", attempt + 1, frame.hex(' '))
+            log.debug("[attempt %d] TX VR: %s", attempt + 1, frame.hex(" "))
 
-            self.ser.write(frame); self.ser.flush()
+            self.ser.write(frame)
+            self.ser.flush()
             time.sleep(gap)
-            self.ser.write(CONT_DD); self.ser.flush()
+            self.ser.write(CONT_DD)
+            self.ser.flush()
             time.sleep(gap)
-            self.ser.write(CONT_48); self.ser.flush()
+            self.ser.write(CONT_48)
+            self.ser.flush()
 
             last_rx = self._listen()
-            log.debug("RX (%dB): %s", len(last_rx), last_rx.hex(' '))
+            log.debug("RX (%dB): %s", len(last_rx), last_rx.hex(" "))
 
             for f in split_frames(last_rx):
                 if len(f) >= 4 and f[0] == 0xCA and f[1] == 0xC0:
@@ -138,7 +151,7 @@ class RackbusTransport:
                     if parsed is None:
                         continue
                     data, crc = parsed
-                    if data:                 # non-empty payload
+                    if data:  # non-empty payload
                         decoded = decode_data(data)
                         value = parse_value(decoded)
                         log.info("VR %d,%d,%d → %r", addr, v, h, value)

@@ -24,14 +24,15 @@ Frame structures:
 
 All EOF markers have high nibble 0xF (observed: F2, FA, FF).
 """
+
 from __future__ import annotations
 
 from typing import Optional, Tuple
 
 from .crc import compute_request_crc
 
-
 # --- Parity helpers ---
+
 
 def even_parity_bit(byte: int) -> int:
     """Return 1 if the 7 LSBs of `byte` have an odd count of ones (i.e.
@@ -51,6 +52,7 @@ def with_parity(byte: int) -> int:
 
 # --- Char ↔ wire (DATA encoding, 0x7F-based) ---
 
+
 def char_to_wire(c) -> int:
     """ASCII char → wire byte using complement-against-0x7F + parity.
 
@@ -68,6 +70,7 @@ def wire_to_char(b: int) -> str:
 
 
 # --- Frame split ---
+
 
 def split_frames(wire: bytes) -> list:
     """Split a wire byte stream into Rackbus frames.
@@ -88,6 +91,7 @@ def split_frames(wire: bytes) -> list:
 
 # --- Request encoding ---
 
+
 def encode_vr_request(addr: int, v: int, h: int) -> bytes:
     """Encode a Variable Read request: VR <addr>,<V>,<H>.
 
@@ -96,25 +100,26 @@ def encode_vr_request(addr: int, v: int, h: int) -> bytes:
     Each payload byte carries even-parity in MSB.
     """
     body = bytearray()
-    body.append(0xCA)                                          # SOF
-    body.append(with_parity(0x22))                             # function '"' (read)
-    body.append(0x5F)                                          # separator '_'
-    for ch in str(addr):                                       # addr ASCII digit(s)
-        body.append(with_parity((0x5F - ord(ch)) & 0xFF))      # 0x5F base!
-    body.append(0x5F)                                          # separator
-    body.append(with_parity((0x5F - v) & 0xFF))                # V (raw int)
+    body.append(0xCA)  # SOF
+    body.append(with_parity(0x22))  # function '"' (read)
+    body.append(0x5F)  # separator '_'
+    for ch in str(addr):  # addr ASCII digit(s)
+        body.append(with_parity((0x5F - ord(ch)) & 0xFF))  # 0x5F base!
+    body.append(0x5F)  # separator
+    body.append(with_parity((0x5F - v) & 0xFF))  # V (raw int)
     body.append(0x5F)
-    body.append(with_parity((0x5F - h) & 0xFF))                # H
-    body.append(with_parity(0x72))                             # end-of-payload 'r'
+    body.append(with_parity((0x5F - h) & 0xFF))  # H
+    body.append(with_parity(0x72))  # end-of-payload 'r'
 
     crc1, crc2 = compute_request_crc(bytes(body))
     body.append(with_parity(crc1))
     body.append(with_parity(crc2))
-    body.append(0xF2)                                          # EOF (parity-violating)
+    body.append(0xF2)  # EOF (parity-violating)
     return bytes(body)
 
 
 # --- Response parsing ---
+
 
 def parse_response_frame(frame: bytes) -> Optional[Tuple[bytes, Optional[bytes]]]:
     """Parse a single response frame.
@@ -145,7 +150,7 @@ def parse_response_frame(frame: bytes) -> Optional[Tuple[bytes, Optional[bytes]]
 
 def decode_data(data: bytes) -> str:
     """Decode data byte stream to ASCII string via inverse complement."""
-    return ''.join(chr(0x7F - (b & 0x7F)) for b in data)
+    return "".join(chr(0x7F - (b & 0x7F)) for b in data)
 
 
 def parse_value(decoded: str):
@@ -160,11 +165,11 @@ def parse_value(decoded: str):
     """
     if not decoded:
         return None
-    if decoded == '@':
+    if decoded == "@":
         return None
     last = decoded[-1]
     body = decoded[:-1]
-    if last == ' ':
+    if last == " ":
         try:
             return int(body)
         except ValueError:
@@ -172,11 +177,11 @@ def parse_value(decoded: str):
     if 0x21 <= ord(last) <= 0x2F:
         dp = ord(last) - 0x20
         sign = 1
-        if body.startswith('-'):
+        if body.startswith("-"):
             sign = -1
             body = body[1:]
         try:
-            return sign * int(body) / (10 ** dp)
+            return sign * int(body) / (10**dp)
         except ValueError:
             return decoded
     return decoded

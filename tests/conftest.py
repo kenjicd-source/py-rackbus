@@ -1,4 +1,5 @@
 """Make the rackbus_client package importable in tests."""
+
 import sys
 from pathlib import Path
 
